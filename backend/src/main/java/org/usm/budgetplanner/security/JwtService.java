@@ -20,36 +20,23 @@ public class JwtService {
     private int expirationInSeconds;
 
 
-    public String extractEmail(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String username) {
         return Jwts.builder()
-                .subject(email)
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000L * expirationInSeconds))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    public boolean isTokenValid(String token, String email) {
-        final String emailFromToken = extractEmail(token);
-        return (emailFromToken.equals(email)) && !isTokenExpired(token);
-    }
-
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
     }
 
     private Claims extractAllClaims(String token) {

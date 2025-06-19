@@ -17,12 +17,12 @@ public class AuthenticationService {
     private final AuthenticationProvider authenticationProvider;
 
     public SuccessfulAuthResponse login(UserLoginDTO loginDetails) {
-        UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(loginDetails.getEmail(), loginDetails.getPassword());
+        UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(loginDetails.getUsername(), loginDetails.getPassword());
         Authentication authentication = authenticationProvider.authenticate(token);
 
         if (authentication.isAuthenticated()) {
             return SuccessfulAuthResponse.builder()
-                    .token(jwtService.generateToken(loginDetails.getEmail()))
+                    .token(jwtService.generateToken(loginDetails.getUsername()))
                     .build();
         } else {
             throw new ApplicationException("Invalid username or password");

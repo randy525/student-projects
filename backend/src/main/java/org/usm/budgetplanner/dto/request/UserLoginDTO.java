@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 public class UserLoginDTO {
 
-    private String email;
+    private String username;
     private String password;
 
 }

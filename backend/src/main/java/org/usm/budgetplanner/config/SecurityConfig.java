@@ -9,13 +9,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.usm.budgetplanner.security.JwtAuthenticationOncePerRequestFilter;
-import org.usm.budgetplanner.security.UserDetailsServiceImpl;
 
 import java.util.List;
 
@@ -24,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthenticationOncePerRequestFilter jwtFilter;
 
     @Bean
@@ -56,9 +58,18 @@ public class SecurityConfig {
     }
 
     @Bean
+    public UserDetailsService inMemoryUserDetailsService() {
+        UserDetails admin = User.withUsername("admin")
+                .password(passwordEncoder().encode("password"))
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(admin);
+    }
+
+    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setUserDetailsService(inMemoryUserDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
