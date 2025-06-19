@@ -144,7 +144,7 @@ CREATE TABLE student_projects (
 );
 ```
 
-### Технологический стек
+### Технологический стекhttps://github.com/randy525/student-projects/blob/master/README.md
 
 #### Backend
 - **Spring Boot 3.4.3** - основной фреймворк
@@ -160,6 +160,12 @@ CREATE TABLE student_projects (
 - **Axios** - HTTP клиент для API запросов
 - **CSS Grid и Flexbox** - современная верстка
 - **LocalStorage** - хранение JWT токенов
+
+## ▶️ Примеры использования проекта с приложением скриншотов
+![image](https://github.com/user-attachments/assets/aba8be5d-9256-4104-a401-f539268cb461)
+![image](https://github.com/user-attachments/assets/60aa7496-dd74-45e9-bf49-7841d23ef799)
+![image](https://github.com/user-attachments/assets/2fc23de5-5c8b-4f42-a259-94d09ce47064)
+
 
 ## ❓ Ответы на контрольные вопросы
 
