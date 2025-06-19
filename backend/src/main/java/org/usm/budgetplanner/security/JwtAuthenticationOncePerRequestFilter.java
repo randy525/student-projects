@@ -36,10 +36,12 @@ public class JwtAuthenticationOncePerRequestFilter extends OncePerRequestFilter 
                                     @NonNull FilterChain filterChain) {
         try {
             String jwt = extractJwtFromRequest(request);
-            String username = jwtService.extractUsername(jwt);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            if (jwt != null) {
+                String username = jwtService.extractUsername(jwt);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -55,6 +57,10 @@ public class JwtAuthenticationOncePerRequestFilter extends OncePerRequestFilter 
 
 
     private String extractJwtFromRequest(HttpServletRequest request) {
-        return request.getHeader(HttpHeaders.AUTHORIZATION).replace("Bearer ", "");
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
+        }
+        return null;
     }
 }
